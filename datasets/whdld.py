@@ -1,10 +1,12 @@
 # datasets/whdld.py
+# 将WHDLD数据集读取为PyTorch可以训练的格式
+
 import os
 from typing import List, Optional
 import numpy as np
-from PIL import Image
+from PIL import Image # 读取图片
 import torch
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset # 数据集基类
 
 # 类别顺序（id=0..5）：
 # 0 vegetation, 1 water, 2 road, 3 building, 4 pavement, 5 bare_soil
@@ -24,8 +26,8 @@ def mask_rgb_to_id(mask_rgb: np.ndarray, colors: np.ndarray) -> np.ndarray:
     colors: (C,3) uint8
     return: (H,W) int64
     """
-    h, w, _ = mask_rgb.shape
-    mask_flat = mask_rgb.reshape(-1, 3).astype(np.int16)
+    h, w, _ = mask_rgb.shape # 获取图像尺寸
+    mask_flat = mask_rgb.reshape(-1, 3).astype(np.int16) # 拉平图像
     colors_int = colors.astype(np.int16)
 
     matches = (mask_flat[:, None, :] == colors_int[None, :, :]).all(axis=2)  # (N,C)
@@ -57,7 +59,7 @@ class WHDLDDataset(Dataset):
         self.transforms = transforms
 
         self.class_names = WHDLD_CLASS_NAMES
-        self.colors = (colors if colors is not None else WHDLD_COLORS).astype(np.uint8)
+        self.colors = (colors if colors is not None else WHDLD_COLORS).astype(np.uint8) # 这里可以直接使用colors
         self.num_classes = len(self.class_names)
 
         # ids: 不带后缀
