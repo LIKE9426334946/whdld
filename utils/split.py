@@ -7,16 +7,17 @@ from typing import List
 def make_splits(root: str, images_dir: str, ratio=(0.8,0.1,0.1), seed: int = 42, out_dir: str = None): # 不改就为默认值
     img_dir = os.path.join(root, images_dir) # /kaggle/input/datasets/thenoart/whdld-data/image/Images
     names = [os.path.splitext(fn)[0] for fn in sorted(os.listdir(img_dir))
-             if fn.lower().endswith((".jpg",".jpeg",".png"))]
+             if fn.lower().endswith((".jpg",".jpeg",".png"))] # 得到原始图片的所有文件名，不包括扩展名，并把它们保存为一个列表
 
     random.seed(seed)
-    random.shuffle(names)  
+    random.shuffle(names)  # 将顺序打乱
 
     n = len(names)
     n_train = int(n * ratio[0])
     n_val = int(n * ratio[1])
 
-    train_ids = names[:n_train]
+    # 划分数据
+    train_ids = names[:n_train] # 共3952张图片
     val_ids = names[n_train:n_train+n_val]
     test_ids = names[n_train+n_val:]
 
