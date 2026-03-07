@@ -44,12 +44,13 @@ def build_datasets(cfg):
         te_path = os.path.join(split_dir, "test.txt")
     
         if not (os.path.exists(tr_path) and os.path.exists(va_path) and os.path.exists(te_path)):
-            make_splits(root=root, images_dir=images_dir, ratio=ratio, seed=cfg["seed"], out_dir=split_dir)
+            make_splits(root=root, images_dir=images_dir, ratio=ratio, seed=cfg["seed"], out_dir=split_dir) # 生成这三个txt文件
 
-        # 看到这里了
         train_ids = read_split(tr_path)
         val_ids   = read_split(va_path)
-    
+
+
+        # 看到这里了
         ds_train = WHDLDDataset(
             root=root, split_files=train_ids,
             images_dir=images_dir, masks_dir=masks_dir,
