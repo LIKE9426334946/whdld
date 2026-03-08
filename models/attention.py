@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+# 实现 SimAM
 class SimAM(nn.Module):
     """
     Parameter-free attention (SimAM).
@@ -15,12 +16,13 @@ class SimAM(nn.Module):
         b, c, h, w = x.size()
         n = h * w - 1
 
-        x_minus_mu = x - x.mean(dim=(2,3), keepdim=True)
-        var = (x_minus_mu ** 2).sum(dim=(2,3), keepdim=True) / (n + 1e-6)
-        e = (x_minus_mu ** 2) / (4 * (var + self.e_lambda)) + 0.5
-        attn = torch.sigmoid(e)
-        return x * attn
+        x_minus_mu = x - x.mean(dim=(2,3), keepdim=True) # 计算均值
+        var = (x_minus_mu ** 2).sum(dim=(2,3), keepdim=True) / (n + 1e-6) # 计算方差
+        e = (x_minus_mu ** 2) / (4 * (var + self.e_lambda)) + 0.5 # 计算能量函数
+        attn = torch.sigmoid(e) # sigmoid得到注意力
+        return x * attn # 返回加权特征
 
+# 通道注意力
 class ChannelAttention(nn.Module):
     def __init__(self, in_ch, reduction=16):
         super().__init__()
