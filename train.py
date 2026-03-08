@@ -21,7 +21,6 @@ def load_cfg(path="config.yaml"):
     with open(path, "r") as f:
         return yaml.safe_load(f)
 
-# 等会儿再看
 def build_datasets(cfg):
     dataset_name = cfg["data"]["dataset"] # whdld
     root = cfg["data"]["root"] # /kaggle/input/datasets/thenoart/whdld-data
@@ -72,7 +71,7 @@ def main():
     set_seed(cfg["seed"]) # 设置随机种子
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-    # 等会儿再看
+    
     ds_train, ds_val, num_classes, colors = build_datasets(cfg)
 
     ignore_index = cfg["loss"]["ignore_index"]
@@ -95,6 +94,7 @@ def main():
         pin_memory=True
     )
 
+    # 使用ResNet34，该看这里了
     model = UNetResNet34Attn(
         num_classes=num_classes,
         simam_in_encoder=cfg["model"]["simam_in_encoder"],
